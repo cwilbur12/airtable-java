@@ -29,7 +29,7 @@ public class TableSelectTest extends WireMockBaseTest {
 
         List<Movie> retval = base.table("Movies", Movie.class).select();
         assertNotNull(retval);
-        assertEquals(9, retval.size());
+        assertEquals(12, retval.size());
 
     }
 
@@ -49,13 +49,13 @@ public class TableSelectTest extends WireMockBaseTest {
 
         List<Movie> retval = table.select(new Sort("Name", Sort.Direction.asc));
         assertNotNull(retval);
-        assertEquals(9, retval.size());
+        assertEquals(12, retval.size());
         Movie mov = retval.get(0);
         assertEquals("Billy Madison", mov.getName());
 
         retval = table.select(new Sort("Name", Sort.Direction.desc));
         assertNotNull(retval);
-        assertEquals(9, retval.size());
+        assertEquals(12, retval.size());
         mov = retval.get(0);
         assertEquals("You've Got Mail", mov.getName());
 
@@ -67,7 +67,7 @@ public class TableSelectTest extends WireMockBaseTest {
 
         List<Movie> retval = base.table("Movies", Movie.class).select("Main View");
         assertNotNull(retval);
-        assertEquals(9, retval.size());
+        assertEquals(5, retval.size());
         Movie mov = retval.get(0);
         assertEquals("The Godfather", mov.getName());
     }

@@ -140,13 +140,14 @@ public class WireMockBaseTest {
         airtable.configure();
         airtable.setProxy("127.0.0.1");
         airtable.setEndpointUrl("http://localhost:8080");
-        base = airtable.base("appTtHA5PfJnVfjdu");
+        base = airtable.base("appLsnybZhB2rXWWB");
+
 
         prop = new WiremockProp();
-        prop.setRecording(false);
-        prop.setCleanDirectorys(false);
-        prop.setProxyBase("192.168.1.254");
-        prop.setProxyPort(8080);
+        prop.setRecording(true);
+        prop.setCleanDirectorys(true);
+//        prop.setProxyBase("192.168.1.254");
+//        prop.setProxyPort(8080);
         prop.setServerPort(8080);
         prop.setTargetUrl("https://api.airtable.com/v0");
 
@@ -159,7 +160,7 @@ public class WireMockBaseTest {
         //start the Wiremock-Server
         startServer();
 
-        //check if record 
+        //check if record
         if (prop.isRecording()) {
             //check if cleanDirectorys
             if (prop.isCleanDirectorys()) {

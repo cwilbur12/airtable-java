@@ -27,7 +27,7 @@ public class TableParameterTest extends WireMockBaseTest {
 
         Table<Movie> movieTable = base.table("Movies", Movie.class);
 
-        
+
         Query query = new Query() {
             @Override
             public String[] getFields() {
@@ -66,7 +66,7 @@ public class TableParameterTest extends WireMockBaseTest {
         };
 
         List<Movie> listMovies = movieTable.select(query);
-        assertEquals(listMovies.size(),9);
+        assertEquals(listMovies.size(),12);
 
     }
 
@@ -131,7 +131,7 @@ public class TableParameterTest extends WireMockBaseTest {
 
         List<Movie> listMovies = movieTable.select(query);
         assertNotNull(listMovies);
-        assertEquals(listMovies.size(), 9);
+        assertEquals(listMovies.size(), 12);
     }
 
     @Test
@@ -191,7 +191,7 @@ public class TableParameterTest extends WireMockBaseTest {
 
         List<Movie> listMovies = movieTable.select(query);
         assertNotNull(listMovies);
-        assertEquals(listMovies.size(), 9);
+        assertEquals(listMovies.size(), 12);
 
     }
 
@@ -203,7 +203,7 @@ public class TableParameterTest extends WireMockBaseTest {
 
         List<Movie> listMovies = movieTable.select(sort);
         assertNotNull(listMovies);
-        assertEquals(listMovies.get(8).getName(), "Billy Madison");
+        assertEquals(listMovies.get(8).getName(), "Forrest Gump");
 
     }
 

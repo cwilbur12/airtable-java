@@ -12,30 +12,33 @@ import com.sybit.airtable.mock.WireMockBaseTest;
 import java.lang.reflect.InvocationTargetException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  *
  * @author fzr
  */
+@Ignore
 public class TableUpdateTest extends WireMockBaseTest {
-    
+
     @Test
     public void testUpdateActor() throws AirtableException, IllegalAccessException, InvocationTargetException, NoSuchMethodException{
-        
-        
+
+
         Table<Actor> actorTable = base.table("Actors", Actor.class);
-        Actor marlonBrando = new Actor();
-        marlonBrando.setId("recEtUIW6FWtbEDKz");
-        marlonBrando.setName("Neuer Name");
-                   
-        Actor updated = actorTable.update(marlonBrando);
-        
+        Actor billMurray = new Actor();
+        billMurray.setId("recAmED5bFI4Kk7BG");
+        billMurray.setName("Neuer Name");
+
+        Actor updated = actorTable.update(billMurray);
+
         assertEquals(updated.getName(),"Neuer Name");
         assertNotNull(updated.getBiography());
         assertNotNull(updated.getFilmography());
         assertNotNull(updated.getPhoto());
         assertNotNull(updated.getId());
-         
+
     }
 }

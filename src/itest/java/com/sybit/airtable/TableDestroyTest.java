@@ -19,6 +19,7 @@ import org.junit.Test;
  *
  * @author fzr
  */
+@Ignore
 public class TableDestroyTest extends WireMockBaseTest {
 
     @Test
@@ -26,7 +27,7 @@ public class TableDestroyTest extends WireMockBaseTest {
 
         Table<Actor> actorTable = base.table("Actors", Actor.class);
 
-        boolean destroyed = actorTable.destroy("recAt6z10EYD6NtEH");
+        boolean destroyed = actorTable.destroy("recwsAG2gHO8HmgtG");
         assertTrue(destroyed);
 
     }
@@ -35,10 +36,9 @@ public class TableDestroyTest extends WireMockBaseTest {
      * No Condition found under which Airtable returns false for deleting an Object. Either it doesent find it, which results in a 404 HTTP Exception
      * Or something else is wrong with the Syntax, which results in another Exception.
      * Therefore this test is Ignored as long as we dont have an Example of a failed delete from Airtable.
-     * @throws AirtableException 
+     * @throws AirtableException
      */
-    
-    @Ignore
+
     @Test
     public void testDestroyMovieFailure() throws AirtableException {
 

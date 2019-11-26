@@ -24,9 +24,9 @@ public class TableFindTest extends WireMockBaseTest {
     public void testFind() throws AirtableException, HttpResponseException {
 
         Table<Actor> actorTable = base.table("Actors", Actor.class);
-        Actor actor = actorTable.find("recEtUIW6FWtbEDKz");
+        Actor actor = actorTable.find("recwsAG2gHO8HmgtG");
         assertNotNull(actor);
-        assertEquals("recEtUIW6FWtbEDKz", actor.getId());
+        assertEquals("recwsAG2gHO8HmgtG", actor.getId());
         assertEquals("Marlon Brando", actor.getName());
     }
 
