@@ -1,0 +1,38 @@
+{
+  "id" : "147de6b2-a59a-4a83-b0ba-d00b69eb0bb8",
+  "name" : "applsnybzhb2rxwwb_movies",
+  "request" : {
+    "url" : "/appLsnybZhB2rXWWB/Movies?maxRecords=2",
+    "method" : "GET",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "application/json"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/json",
+        "caseInsensitive" : true
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "applsnybzhb2rxwwb_movies-147de6b2-a59a-4a83-b0ba-d00b69eb0bb8.json",
+    "headers" : {
+      "access-control-allow-headers" : "authorization,content-length,content-type,user-agent,x-airtable-application-id,x-airtable-user-agent,x-api-version,x-requested-with",
+      "access-control-allow-methods" : "DELETE,GET,OPTIONS,PATCH,POST,PUT",
+      "access-control-allow-origin" : "*",
+      "Content-Type" : "application/json; charset=utf-8",
+      "Date" : "Tue, 26 Nov 2019 09:41:05 GMT",
+      "etag" : "W/\"684-0a/E9IollxwM3LfQmsPBAVVbhWs\"",
+      "Server" : "Tengine",
+      "Set-Cookie" : "brw=brw2smfC8KyXm3xUV; path=/; expires=Thu, 26 Nov 2020 09:41:05 GMT; domain=.airtable.com; secure; httponly",
+      "Strict-Transport-Security" : "max-age=31536000; includeSubDomains; preload",
+      "Vary" : "Accept-Encoding",
+      "x-airtable-has-non-empty-changes-payload" : "false",
+      "Connection" : "keep-alive"
+    }
+  },
+  "uuid" : "147de6b2-a59a-4a83-b0ba-d00b69eb0bb8",
+  "persistent" : true,
+  "insertionIndex" : 27
+}
