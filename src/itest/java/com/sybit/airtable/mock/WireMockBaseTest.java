@@ -15,7 +15,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.extension.Parameters;
-import com.github.tomakehurst.wiremock.recording.SnapshotRecordResult;
 import com.sybit.airtable.Base;
 
 import java.io.File;
@@ -52,7 +51,6 @@ public class WireMockBaseTest {
     @Before
     public void setUp() throws AirtableException {
 
-        //TODO set up should use props for all configuration
         airtable.configure();
         airtable.setProxy(LOCALHOST);
         airtable.setEndpointUrl(AIRTABLE_ENDPOINT);
@@ -66,20 +64,27 @@ public class WireMockBaseTest {
             createWiremockServer(wiremockProperties.getServerPort());
         }
 
-        //start the Wiremock-Server
         startServer();
-        //TODO set up should only clean the directory once not for every test run if multiple run
 
-        //check if record
+        //TODO set up should only clean the directory once not for every test run if multiple run
         if (wiremockProperties.isRecording()) {
-            //check if cleanDirectorys
-            if (wiremockProperties.isCleanDirectorys()) {
+            if (wiremockProperties.isCleanDirectories()) {
                 cleanExistingRecords();
                 startRecording();
             } else {
                 startRecording();
             }
         }
+    }
+
+    @After
+    public void tearDown() {
+
+        if (wiremockProperties.isRecording()) {
+            stopRecording();
+        }
+
+        stopServer();
     }
 
     private boolean isProxySet() {
@@ -102,18 +107,7 @@ public class WireMockBaseTest {
 
     }
 
-
-    @After
-    public void tearDown() {
-
-        if (wiremockProperties.isRecording()) {
-            stopRecording();
-        }
-
-        stopServer();
-    }
-
-    public static void startRecording() {
+    private static void startRecording() {
 
         wireMockServer.startRecording(recordSpec()
                 .forTarget(wiremockProperties.getTargetUrl())
@@ -127,30 +121,30 @@ public class WireMockBaseTest {
                 .matchRequestBodyWithEqualToJson(false, true));
     }
 
-    public static void stopRecording() {
+    private static void stopRecording() {
 
-        SnapshotRecordResult recordedMappings = wireMockServer.stopRecording();
+        wireMockServer.stopRecording();
     }
 
-    public static void startServer() {
+    private static void startServer() {
 
         wireMockServer.start();
     }
 
-    public static void stopServer() {
+    private static void stopServer() {
 
         wireMockServer.stop();
     }
 
-    public static void createWiremockServer(int serverPort, String proxyBase, int proxyPort) {
+    private static void createWiremockServer(int serverPort, String proxyBase, int proxyPort) {
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(serverPort).proxyVia(proxyBase, proxyPort));
     }
 
-    public static void createWiremockServer(int serverPort) {
+    private static void createWiremockServer(int serverPort) {
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(serverPort));
     }
 
-    public static void cleanExistingRecords() {
+    private static void cleanExistingRecords() {
 
         File mappings = new File(MAPPING_PATH);
         File bodyFiles = new File(FILES_PATH);

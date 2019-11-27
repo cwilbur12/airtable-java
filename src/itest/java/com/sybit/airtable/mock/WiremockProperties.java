@@ -4,99 +4,54 @@ import java.util.Properties;
 
 public class WiremockProperties extends Properties {
 
-    private boolean recording;
+    private static final String RECORDING = "recording";
+    private static final String CLEAN_DIRECTORIES = "cleanDirectories";
+    private static final String PROXY_BASE = "proxyBase";
+    private static final String PROXY_PORT = "proxyPort";
+    private static final String SERVER_PORT = "serverPort";
+    private static final String TARGET_URL = "targetUrl";
 
-    private boolean cleanDirectorys;
-
-    private String targetUrl;
-
-    private String proxyBase;
-
-    private int proxyPort;
-
-    private int serverPort;
 
     /**
      * @return the recording
      */
     public boolean isRecording() {
-        return recording;
-    }
-
-    /**
-     * @param aRecording the recording to set
-     */
-    public void setRecording(boolean aRecording) {
-        recording = aRecording;
+        return Boolean.parseBoolean(this.getProperty(RECORDING));
     }
 
     /**
      * @return the cleanDirectorys
      */
-    public boolean isCleanDirectorys() {
-        return cleanDirectorys;
-    }
-
-    /**
-     * @param aCleanDirectorys the cleanDirectorys to set
-     */
-    public void setCleanDirectorys(boolean aCleanDirectorys) {
-        cleanDirectorys = aCleanDirectorys;
+    public boolean isCleanDirectories() {
+        return Boolean.parseBoolean(this.getProperty(CLEAN_DIRECTORIES));
     }
 
     /**
      * @return the targetUrl
      */
     public String getTargetUrl() {
-        return targetUrl;
-    }
-
-    /**
-     * @param aTargetUrl the targetUrl to set
-     */
-    public void setTargetUrl(String aTargetUrl) {
-        targetUrl = aTargetUrl;
+        return this.getProperty(TARGET_URL);
     }
 
     /**
      * @return the proxyBase
      */
     public String getProxyBase() {
-        return proxyBase;
-    }
-
-    /**
-     * @param aProxyBase the proxyBase to set
-     */
-    public void setProxyBase(String aProxyBase) {
-        proxyBase = aProxyBase;
+        return this.getProperty(PROXY_BASE);
     }
 
     /**
      * @return the proxyPort
      */
     public int getProxyPort() {
-        return proxyPort;
-    }
-
-    /**
-     * @param aProxyPort the proxyPort to set
-     */
-    public void setProxyPort(int aProxyPort) {
-        proxyPort = aProxyPort;
+        return Integer.valueOf(this.getProperty(PROXY_PORT));
     }
 
     /**
      * @return the serverPort
      */
     public int getServerPort() {
-        return serverPort;
+        return Integer.valueOf(this.getProperty(SERVER_PORT));
     }
 
-    /**
-     * @param aServerPort the serverPort to set
-     */
-    public void setServerPort(int aServerPort) {
-        serverPort = aServerPort;
-    }
 };
