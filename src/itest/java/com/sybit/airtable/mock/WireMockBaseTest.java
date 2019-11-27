@@ -12,158 +12,68 @@ import com.sybit.airtable.exception.AirtableException;
 import org.junit.Before;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.extension.Parameters;
 import com.github.tomakehurst.wiremock.recording.SnapshotRecordResult;
 import com.sybit.airtable.Base;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 
 /**
  * Base Class to test using WireMock.
- *
+ * <p>
  * Config files for the requests are stored at 'src/test/resources/__files' and
  * 'src/test/resources/mappings'.
  */
 public class WireMockBaseTest {
 
+    private static final String LOCALHOST = "127.0.0.1";
+    private static final String AIRTABLE_ENDPOINT = "http://localhost:8080";
+    private static final String AIRTABLE_BASE = "appLsnybZhB2rXWWB";
+
+
+    private static final String MAPPING_PATH = "src/test/resources/mappings";
+    private static final String FILES_PATH = "src/test/resources/__files";
+
+
     private static WireMockServer wireMockServer;
-    private static WiremockProp prop;
+    private static WiremockProperties wiremockProperties;
 
     protected static Airtable airtable = new Airtable();
     protected static Base base;
 
-    private class WiremockProp {
-
-        private boolean recording;
-
-        private boolean cleanDirectorys;
-
-        private String targetUrl;
-
-        private String proxyBase;
-
-        private int proxyPort;
-
-        private int serverPort;
-
-        /**
-         * @return the recording
-         */
-        public boolean isRecording() {
-            return recording;
-        }
-
-        /**
-         * @param aRecording the recording to set
-         */
-        public void setRecording(boolean aRecording) {
-            recording = aRecording;
-        }
-
-        /**
-         * @return the cleanDirectorys
-         */
-        public boolean isCleanDirectorys() {
-            return cleanDirectorys;
-        }
-
-        /**
-         * @param aCleanDirectorys the cleanDirectorys to set
-         */
-        public void setCleanDirectorys(boolean aCleanDirectorys) {
-            cleanDirectorys = aCleanDirectorys;
-        }
-
-        /**
-         * @return the targetUrl
-         */
-        public String getTargetUrl() {
-            return targetUrl;
-        }
-
-        /**
-         * @param aTargetUrl the targetUrl to set
-         */
-        public void setTargetUrl(String aTargetUrl) {
-            targetUrl = aTargetUrl;
-        }
-
-        /**
-         * @return the proxyBase
-         */
-        public String getProxyBase() {
-            return proxyBase;
-        }
-
-        /**
-         * @param aProxyBase the proxyBase to set
-         */
-        public void setProxyBase(String aProxyBase) {
-            proxyBase = aProxyBase;
-        }
-
-        /**
-         * @return the proxyPort
-         */
-        public int getProxyPort() {
-            return proxyPort;
-        }
-
-        /**
-         * @param aProxyPort the proxyPort to set
-         */
-        public void setProxyPort(int aProxyPort) {
-            proxyPort = aProxyPort;
-        }
-
-        /**
-         * @return the serverPort
-         */
-        public int getServerPort() {
-            return serverPort;
-        }
-
-        /**
-         * @param aServerPort the serverPort to set
-         */
-        public void setServerPort(int aServerPort) {
-            serverPort = aServerPort;
-        }
-    };
 
     @Before
     public void setUp() throws AirtableException {
 
+        //TODO set up should use props for all configuration
         airtable.configure();
-        airtable.setProxy("127.0.0.1");
-        airtable.setEndpointUrl("http://localhost:8080");
-        base = airtable.base("appLsnybZhB2rXWWB");
+        airtable.setProxy(LOCALHOST);
+        airtable.setEndpointUrl(AIRTABLE_ENDPOINT);
+        base = airtable.base(AIRTABLE_BASE);
 
+        readWiremockProperties();
 
-        prop = new WiremockProp();
-        prop.setRecording(true);
-        prop.setCleanDirectorys(true);
-//        prop.setProxyBase("192.168.1.254");
-//        prop.setProxyPort(8080);
-        prop.setServerPort(8080);
-        prop.setTargetUrl("https://api.airtable.com/v0");
-
-        if (prop.getProxyBase() != null && prop.getProxyPort() != 0) {
-            wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(prop.getServerPort()).proxyVia(prop.getProxyBase(), prop.getProxyPort()));
+        if (isProxySet()) {
+            createWiremockServer(wiremockProperties.getServerPort(), wiremockProperties.getProxyBase(), wiremockProperties.getProxyPort());
         } else {
-            wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(prop.getServerPort()));
+            createWiremockServer(wiremockProperties.getServerPort());
         }
 
         //start the Wiremock-Server
         startServer();
+        //TODO set up should only clean the directory once not for every test run if multiple run
 
         //check if record
-        if (prop.isRecording()) {
+        if (wiremockProperties.isRecording()) {
             //check if cleanDirectorys
-            if (prop.isCleanDirectorys()) {
+            if (wiremockProperties.isCleanDirectorys()) {
                 cleanExistingRecords();
                 startRecording();
             } else {
@@ -172,10 +82,31 @@ public class WireMockBaseTest {
         }
     }
 
+    private boolean isProxySet() {
+        return !wiremockProperties.getProxyBase().isEmpty() && wiremockProperties.getProxyPort() != 0;
+    }
+
+    private void readWiremockProperties() {
+        final String file = "/wiremock.properties";
+
+        InputStream in = null;
+        try {
+            wiremockProperties = new WiremockProperties();
+            in = getClass().getResourceAsStream(file);
+            wiremockProperties.load(in);
+        } catch (IOException | NullPointerException e) {
+            System.err.println("Exception reading Wiremock Properties: " + e);
+        } finally {
+            org.apache.commons.io.IOUtils.closeQuietly(in);
+        }
+
+    }
+
+
     @After
     public void tearDown() {
 
-        if (prop.isRecording()) {
+        if (wiremockProperties.isRecording()) {
             stopRecording();
         }
 
@@ -185,7 +116,7 @@ public class WireMockBaseTest {
     public static void startRecording() {
 
         wireMockServer.startRecording(recordSpec()
-                .forTarget(prop.getTargetUrl())
+                .forTarget(wiremockProperties.getTargetUrl())
                 .captureHeader("Accept")
                 .captureHeader("Content-Type", true)
                 .extractBinaryBodiesOver(0)
@@ -211,16 +142,24 @@ public class WireMockBaseTest {
         wireMockServer.stop();
     }
 
+    public static void createWiremockServer(int serverPort, String proxyBase, int proxyPort) {
+        wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(serverPort).proxyVia(proxyBase, proxyPort));
+    }
+
+    public static void createWiremockServer(int serverPort) {
+        wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(serverPort));
+    }
+
     public static void cleanExistingRecords() {
 
-        File mappings = new File("src/test/resources/mappings");
-        File bodyFiles = new File("src/test/resources/__files");
+        File mappings = new File(MAPPING_PATH);
+        File bodyFiles = new File(FILES_PATH);
 
         try {
             FileUtils.cleanDirectory(mappings);
             FileUtils.cleanDirectory(bodyFiles);
         } catch (IOException ex) {
-            System.out.println("Exception deleting Files: " + ex);
+            System.err.println("Exception deleting Files: " + ex);
         }
     }
 
