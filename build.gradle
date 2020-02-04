@@ -119,7 +119,7 @@ allprojects {
 
 group 'com.cwilbur12'
 archivesBaseName = 'airtable-java'
-version = getVersionName()
+version = '0.3.0'
 
 repositories {
     mavenCentral()
