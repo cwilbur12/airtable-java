@@ -118,7 +118,7 @@ allprojects {
 }
 
 group 'com.cwilbur12'
-archivesBaseName = 'airtable-java'
+archivesBaseName = 'airtable.java'
 version = '0.3.0'
 
 repositories {
@@ -143,7 +143,7 @@ publishing {
     repositories {
         maven {
             name = "Github"
-            url = uri("https://maven.pkg.github.com/cwibur12/airtable-java")
+            url = uri("https://maven.pkg.github.com/cwibur12/airtable.java")
             credentials {
                 username = findProperty("github.username")
                 password = findProperty("github.token")
