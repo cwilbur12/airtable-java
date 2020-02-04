@@ -144,8 +144,8 @@ publishing {
             name = "Github"
             url = uri("https://maven.pkg.github.com/cwibur12/airtable-java")
             credentials {
-                username = findProperty("github.username")
-                password = findProperty("github.token")
+                username = "cwilbur12"
+                password = "2bb9f7e44c04e55480073ab34c0f1453332bc865"
             }
         }
     }
